@@ -1,12 +1,9 @@
-package com.hq.quanhqph33420_lab3
-
-import com.hq.quanhqph33420_lab3.bai8.TheMuon
+package com.hq.quanhqph33420_lab3.bai8
 
 var danhSachPhieuMuon = mutableListOf<TheMuon>()
 fun main() {
     var key = true
     do {
-        println("---------Menu---------")
         println("1. Xem danh sach")
         println("2. Them phieu muon")
         println("3. Xoa phieu muon theo ma")
