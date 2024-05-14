@@ -13,7 +13,10 @@
         android:theme="@style/Theme.Quanhqph33420_assignment"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".src.screens.WelcomeScreen"
+            android:exported="false" />
+        <activity
+            android:name=".src.screens.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Quanhqph33420_assignment">

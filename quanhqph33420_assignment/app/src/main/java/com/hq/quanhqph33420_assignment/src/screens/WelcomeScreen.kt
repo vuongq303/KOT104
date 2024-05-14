@@ -1,18 +1,16 @@
-package com.hq.quanhqph33420_assignment
+package com.hq.quanhqph33420_assignment.src.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,31 +23,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.ui.theme.Quanhqph33420_assignmentTheme
 
-class MainActivity : ComponentActivity() {
+
+class WelcomeScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Quanhqph33420_assignmentTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    Greeting("Android")
-//                }
-                BackgroundView()
-            }
+            BackgroundView()
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -81,8 +65,10 @@ fun BackgroundView(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.welcome),
             contentDescription = "welcome image",
-            contentScale = ContentScale.Fit,
-            
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .height(300.dp)
+                .padding(0.dp, 30.dp)
         )
         Text(
             text = "Họ tên: Hoàng Quốc Quân",
@@ -109,7 +95,9 @@ fun BackgroundView(modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     Quanhqph33420_assignmentTheme {
-        Surface {
+        Surface(
+            modifier = Modifier.background(Color.White)
+        ) {
             BackgroundView()
         }
     }
