@@ -296,7 +296,7 @@ private fun ComponentCart(modifier: Modifier = Modifier, navController: NavContr
                 )
             }
             Button(
-                onClick = { /*TODO*/ }, shape = RoundedCornerShape(8.dp),
+                onClick = { navController.navigate("checkout") }, shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),

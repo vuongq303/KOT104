@@ -27,6 +27,12 @@ fun AssignmentApp() {
         composable("cart") {
             CartScreen(navController = navController)
         }
+        composable("checkout") {
+            CheckOutScreen(navController = navController)
+        }
+        composable("notification") {
+            NotificationScreen(navController = navController)
+        }
     }
 
 }
