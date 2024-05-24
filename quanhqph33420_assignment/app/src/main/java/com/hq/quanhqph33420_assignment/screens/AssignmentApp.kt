@@ -21,6 +21,12 @@ fun AssignmentApp() {
         composable("home") {
             HomeScreen(navController = navController)
         }
+        composable("itemProduct") {
+            ItemProduct(navController = navController)
+        }
+        composable("cart") {
+            CartScreen(navController = navController)
+        }
     }
 
 }

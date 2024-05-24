@@ -13,12 +13,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,18 +43,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
-@Preview
 @Composable
-fun ItemProduct() {
-    ComponentItemProduct()
+fun ItemProduct(navController: NavController) {
+    ComponentItemProduct(navController = navController)
 }
 
 @Composable
-fun ComponentItemProduct(modifier: Modifier = Modifier) {
-    Surface(modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+fun ComponentItemProduct(modifier: Modifier = Modifier, navController: NavController) {
+    val scrollSate = rememberScrollState()
+    Column(
+        modifier
+            .fillMaxSize()
+            .verticalScroll(scrollSate)
+    ) {
         Column {
             Box(
                 modifier
@@ -161,7 +169,7 @@ fun ComponentItemProduct(modifier: Modifier = Modifier) {
                         Spacer(modifier.width(10.dp))
                         Card(modifier.size(30.dp), shape = RoundedCornerShape(5.dp)) {
                             IconButton(onClick = { /*TODO*/ }) {
-                                Icon(Icons.Filled.Delete, contentDescription = null)
+                                Icon(Icons.Filled.RemoveCircleOutline, contentDescription = null)
                             }
                         }
                     }
@@ -229,7 +237,7 @@ fun ComponentItemProduct(modifier: Modifier = Modifier) {
                         )
                     ) {
                         Button(
-                            onClick = { /*TODO*/ },
+                            onClick = { navController.navigate("cart") },
                             modifier
                                 .fillMaxWidth(0.9f)
                                 .height(60.dp),

@@ -69,12 +69,14 @@ import com.hq.quanhqph33420_assignment.nav.IconItems
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    ComponentHomeScreen()
+    ComponentHomeScreen(navController = navController)
 }
 
 @Composable
-private fun ItemProduct(productModel: ProductModel) {
-    Column(modifier = Modifier.clickable { }) {
+private fun ItemProduct(productModel: ProductModel, navController: NavController) {
+    Column(modifier = Modifier.clickable {
+        navController.navigate("itemProduct")
+    }) {
         Box(modifier = Modifier.height(200.dp)) {
             AsyncImage(
                 model = productModel.imgProduct,
@@ -125,7 +127,7 @@ private fun ItemProduct(productModel: ProductModel) {
 }
 
 @Composable
-private fun ListProduct() {
+private fun ListProduct(navController: NavController) {
     val itemsList = listOf(
         ProductModel(
             "1",
@@ -169,7 +171,7 @@ private fun ListProduct() {
         verticalItemSpacing = 20.dp,
         content = {
             items(itemsList) { item ->
-                ItemProduct(productModel = item)
+                ItemProduct(productModel = item, navController = navController)
             }
         }
     )
@@ -259,7 +261,7 @@ private fun BottomNavigationComponent(
 }
 
 @Composable
-private fun ComponentHomeScreen(modifier: Modifier = Modifier) {
+private fun ComponentHomeScreen(modifier: Modifier = Modifier, navController: NavController) {
     Surface(modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column {
             Row(
@@ -296,7 +298,7 @@ private fun ComponentHomeScreen(modifier: Modifier = Modifier) {
             }
             Spacer(modifier.height(15.dp))
             FilterComponent()
-            ListProduct()
+            ListProduct(navController = navController)
             BottomNavigationComponent()
         }
     }
