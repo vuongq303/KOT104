@@ -35,7 +35,7 @@ fun WelcomeScreen(navController: NavController) {
 
 @Preview
 @Composable
-fun ComponentWelcome(modifier: Modifier = Modifier, navController: NavController) {
+private fun ComponentWelcome(modifier: Modifier = Modifier, navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painterResource(id = R.drawable.welcome_img),

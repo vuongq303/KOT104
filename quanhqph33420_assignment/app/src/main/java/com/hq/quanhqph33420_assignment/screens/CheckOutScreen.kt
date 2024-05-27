@@ -50,7 +50,7 @@ fun CheckOutScreen(navController: NavController) {
 
 
 @Composable
-fun ComponentCheckOut(modifier: Modifier = Modifier, navController: NavController) {
+private fun ComponentCheckOut(modifier: Modifier = Modifier, navController: NavController) {
     val scrollState = rememberScrollState()
     Column(
         modifier
@@ -202,7 +202,7 @@ fun ComponentCheckOut(modifier: Modifier = Modifier, navController: NavControlle
                     fontSize = 18.sp,
                     fontWeight = FontWeight(400),
                     fontFamily = GoogleFont.NunitoSansFont,
-                    color = Color(0xFF80808),
+                    color = Color(0xFF909090),
                 )
                 Text(
                     text = "$95.00",
@@ -223,7 +223,7 @@ fun ComponentCheckOut(modifier: Modifier = Modifier, navController: NavControlle
                     fontSize = 18.sp,
                     fontWeight = FontWeight(400),
                     fontFamily = GoogleFont.NunitoSansFont,
-                    color = Color(0xFF80808),
+                    color = Color(0xFF909090),
                 )
                 Text(
                     text = "$15.00",
@@ -244,7 +244,7 @@ fun ComponentCheckOut(modifier: Modifier = Modifier, navController: NavControlle
                     fontSize = 18.sp,
                     fontWeight = FontWeight(400),
                     fontFamily = GoogleFont.NunitoSansFont,
-                    color = Color(0xFF80808),
+                    color = Color(0xFF909090),
                 )
                 Text(
                     text = "$115.00",

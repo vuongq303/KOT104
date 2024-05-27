@@ -53,7 +53,7 @@ fun ItemProduct(navController: NavController) {
 }
 
 @Composable
-fun ComponentItemProduct(modifier: Modifier = Modifier, navController: NavController) {
+private fun ComponentItemProduct(modifier: Modifier = Modifier, navController: NavController) {
     val scrollSate = rememberScrollState()
     Column(
         modifier

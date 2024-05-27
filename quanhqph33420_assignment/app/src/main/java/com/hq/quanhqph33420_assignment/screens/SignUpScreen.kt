@@ -51,7 +51,7 @@ fun SignUpScreen(navController: NavController) {
 
 @Preview
 @Composable
-fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavController) {
+private fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavController) {
     var email by remember {
         mutableStateOf("")
     }
