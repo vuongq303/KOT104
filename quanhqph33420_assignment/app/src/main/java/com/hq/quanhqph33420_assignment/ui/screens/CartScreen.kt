@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.screens
+package com.hq.quanhqph33420_assignment.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.hq.quanhqph33420_assignment.font.GoogleFont
-import com.hq.quanhqph33420_assignment.model.ProductModel
+import com.hq.quanhqph33420_assignment.model.entities.Products
 
 @Composable
 fun CartScreen(navController: NavController) {
@@ -56,28 +56,28 @@ fun CartScreen(navController: NavController) {
 @Composable
 private fun ListItemCart() {
     val itemsList = listOf(
-        ProductModel(
+        Products(
             "1",
             "name1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
             5
         ),
-        ProductModel(
+        Products(
             "2",
             "namure1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
             5
         ),
-        ProductModel(
+        Products(
             "3",
             "narume1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
             5
         ),
-        ProductModel(
+        Products(
             "4",
             "name6u1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
@@ -93,7 +93,7 @@ private fun ListItemCart() {
 }
 
 @Composable
-private fun ItemCard(item: ProductModel, modifier: Modifier = Modifier) {
+private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

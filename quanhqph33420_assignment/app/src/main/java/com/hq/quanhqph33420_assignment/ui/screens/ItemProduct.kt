@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.screens
+package com.hq.quanhqph33420_assignment.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

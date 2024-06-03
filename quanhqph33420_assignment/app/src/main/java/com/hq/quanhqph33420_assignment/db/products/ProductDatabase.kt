@@ -1,12 +1,13 @@
-package com.hq.quanhqph33420_assignment.db
+package com.hq.quanhqph33420_assignment.db.products
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.hq.quanhqph33420_assignment.model.ProductModel
+import com.hq.quanhqph33420_assignment.database.dao.ProductDao
+import com.hq.quanhqph33420_assignment.model.entities.Products
 
-@Database(entities = [ProductModel::class], version = 1, exportSchema = false)
+@Database(entities = [Products::class], version = 1, exportSchema = false)
 abstract class ProductDatabase() : RoomDatabase() {
     companion object {
         @Volatile

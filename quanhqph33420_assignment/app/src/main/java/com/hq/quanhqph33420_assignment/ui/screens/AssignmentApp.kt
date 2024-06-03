@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.screens
+package com.hq.quanhqph33420_assignment.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost

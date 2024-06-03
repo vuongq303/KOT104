@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.nav
+package com.hq.quanhqph33420_assignment.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

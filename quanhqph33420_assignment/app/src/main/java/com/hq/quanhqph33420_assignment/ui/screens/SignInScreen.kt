@@ -1,5 +1,7 @@
-package com.hq.quanhqph33420_assignment.screens
+package com.hq.quanhqph33420_assignment.ui.screens
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -39,29 +42,39 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hq.quanhqph33420_assignment.R
+import com.hq.quanhqph33420_assignment.database.db.MyDatabase
+import com.hq.quanhqph33420_assignment.database.factory.UserFactory
+import com.hq.quanhqph33420_assignment.database.repository.UserRepository
+import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
-fun SignUpScreen(navController: NavController) {
-    ComponentSignUp(navController = navController)
+fun SignInScreen(navController: NavController) {
+    val context = LocalContext.current
+    val userRepository = UserRepository(MyDatabase.getDatabase(context = context).userDao())
+    val userViewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
+
+    ComponentSignIn(navController = navController, context = context, userViewModel = userViewModel)
 }
 
+
 @Composable
-private fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavController) {
+private fun ComponentSignIn(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    context: Context,
+    userViewModel: UserViewModel
+) {
     var email by remember {
         mutableStateOf("")
     }
     var password by remember {
         mutableStateOf("")
     }
-    var name by remember {
-        mutableStateOf("")
-    }
-    var confirmPassword by remember {
-        mutableStateOf("")
-    }
+
     Column(
         modifier
             .fillMaxSize()
@@ -96,15 +109,22 @@ private fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavCon
             Divider(
                 thickness = 1.dp,
                 modifier = Modifier
-                    .padding(20.dp),
-                color = Color(0xFFBDBDBD)
+                    .padding(20.dp), color = Color(0xFFBDBDBD)
             )
         }
         Text(
+            text = "Hello !", modifier.padding(10.dp),
+            fontSize = 30.sp,
+            color = Color(0xFF909090),
+            fontFamily = GoogleFont.MerriweatherFont,
+            fontWeight = FontWeight(400)
+        )
+        Text(
             text = "WELCOME BACK",
             fontSize = 24.sp,
-            modifier = Modifier.padding(10.dp, 20.dp, 0.dp, 10.dp),
+            modifier = Modifier.padding(10.dp, 0.dp),
             fontWeight = FontWeight(700),
+            color = Color(0xFF303030),
             fontFamily = GoogleFont.MerriweatherFont
         )
         Spacer(modifier.height(20.dp))
@@ -116,20 +136,7 @@ private fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavCon
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
             colors = CardDefaults.cardColors(Color.White)
         ) {
-            Column(modifier.fillMaxHeight(0.7f), verticalArrangement = Arrangement.Center) {
-                TextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(text = "Name") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
-                    )
-                )
-                Spacer(modifier.height(20.dp))
+            Column(modifier.fillMaxHeight(0.4f), verticalArrangement = Arrangement.Center) {
                 TextField(
                     value = email,
                     onValueChange = { email = it },
@@ -156,25 +163,40 @@ private fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavCon
                         focusedContainerColor = Color.White
                     )
                 )
-                Spacer(modifier.height(20.dp))
-                TextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = { Text(text = "Confirm Password") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
-                    )
-                )
             }
-
-            Column(modifier.fillMaxHeight(1f), verticalArrangement = Arrangement.Center) {
+            Text(
+                text = "Forgot Password",
+                modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                fontWeight = FontWeight(600),
+                fontFamily = GoogleFont.NunitoSansFont
+            )
+            Column(modifier.fillMaxHeight(0.8f), verticalArrangement = Arrangement.Center) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        if (email.isEmpty() && password.isEmpty()) {
+                            Toast.makeText(context, "Data empty!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            val result = userViewModel.userSignIn(email, password)
+                            result.observeForever { listItem ->
+                                if (listItem.size == 1) {
+                                    Toast.makeText(context, "Login complete!", Toast.LENGTH_SHORT)
+                                        .show()
+                                    navController.navigate("home")
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Information incorrect!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                            }
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
@@ -183,35 +205,26 @@ private fun ComponentSignUp(modifier: Modifier = Modifier, navController: NavCon
                         .height(50.dp)
                 ) {
                     Text(
-                        text = "Sign Up",
+                        text = "Log in",
                         fontSize = 18.sp,
-                        fontFamily = GoogleFont.NunitoSansFont,
-                        fontWeight = FontWeight(600)
+                        fontWeight = FontWeight(600),
+                        fontFamily = GoogleFont.NunitoSansFont
                     )
                 }
                 Spacer(modifier.height(20.dp))
-                Row(
-                    modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Already have account?",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight(600)
+                ClickableText(
+                    text = AnnotatedString("SIGN UP"),
+                    onClick = {
+                        navController.navigate("signup")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    style = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight(400),
+                        fontFamily = GoogleFont.NunitoSansFont
                     )
-                    ClickableText(
-                        text = AnnotatedString("SIGN IN"),
-                        onClick = {
-                            navController.navigate("signin")
-                        },
-                        style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight(700)
-                        )
-                    )
-                }
+                )
             }
         }
     }

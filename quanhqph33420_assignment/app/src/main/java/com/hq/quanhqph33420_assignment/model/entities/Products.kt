@@ -1,10 +1,10 @@
-package com.hq.quanhqph33420_assignment.model
+package com.hq.quanhqph33420_assignment.model.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Product")
-data class ProductModel(
+@Entity
+data class Products(
     @PrimaryKey
     val id: String,
     val nameProduct: String,
