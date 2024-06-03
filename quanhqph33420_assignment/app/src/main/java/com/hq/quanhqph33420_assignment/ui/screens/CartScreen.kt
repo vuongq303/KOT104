@@ -57,28 +57,28 @@ fun CartScreen(navController: NavController) {
 private fun ListItemCart() {
     val itemsList = listOf(
         Products(
-            "1",
+            1,
             "name1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
             5
         ),
         Products(
-            "2",
+            2,
             "namure1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
             5
         ),
         Products(
-            "3",
+            3,
             "narume1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
             5
         ),
         Products(
-            "4",
+            4,
             "name6u1",
             "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
             40,
@@ -104,7 +104,7 @@ private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
         Card(modifier = Modifier.size(100.dp)) {
             AsyncImage(
                 model = item.imgProduct,
-                contentDescription = item.id,
+                contentDescription = "${item.id}",
                 contentScale = ContentScale.Crop
             )
         }

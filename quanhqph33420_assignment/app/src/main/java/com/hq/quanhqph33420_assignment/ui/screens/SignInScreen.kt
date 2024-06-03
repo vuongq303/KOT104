@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +55,9 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
 @Composable
 fun SignInScreen(navController: NavController) {
     val context = LocalContext.current
-    val userRepository = UserRepository(MyDatabase.getDatabase(context = context).userDao())
+    val scope = rememberCoroutineScope()
+    val userRepository =
+        UserRepository(MyDatabase.getDatabase(context = context, scope = scope).userDao())
     val userViewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
 
     ComponentSignIn(navController = navController, context = context, userViewModel = userViewModel)

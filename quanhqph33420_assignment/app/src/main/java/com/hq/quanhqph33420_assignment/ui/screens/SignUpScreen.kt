@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,8 +54,11 @@ import com.hq.quanhqph33420_assignment.model.entities.Users
 
 @Composable
 fun SignUpScreen(navController: NavController) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     val userRepository =
-        UserRepository(MyDatabase.getDatabase(context = LocalContext.current).userDao())
+        UserRepository(MyDatabase.getDatabase(context = context, scope = scope).userDao())
     val userViewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
     ComponentSignUp(navController = navController, viewModel = userViewModel)
 }
@@ -196,7 +200,7 @@ private fun ComponentSignUp(
                         } else if (password != confirmPassword) {
                             Toast.makeText(context, "Password not match!", Toast.LENGTH_SHORT)
                                 .show()
-                        } else {    
+                        } else {
                             val result = viewModel.userSignUp(Users(1, email, name, password))
                             Toast.makeText(context, "$result", Toast.LENGTH_SHORT).show()
                         }

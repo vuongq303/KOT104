@@ -1,5 +1,6 @@
 package com.hq.quanhqph33420_assignment.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,21 +45,32 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.hq.quanhqph33420_assignment.R
+import com.hq.quanhqph33420_assignment.database.db.MyDatabase
+import com.hq.quanhqph33420_assignment.database.factory.ProductFactory
+import com.hq.quanhqph33420_assignment.database.repository.ProductRepository
+import com.hq.quanhqph33420_assignment.database.repository.UserRepository
+import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.entities.Products
 import com.hq.quanhqph33420_assignment.model.FilterIcon
@@ -66,19 +78,28 @@ import com.hq.quanhqph33420_assignment.model.IconItems
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    ComponentHomeScreen(navController = navController)
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val productRepository =
+        ProductRepository(MyDatabase.getDatabase(context = context, scope = scope).productDao())
+    val viewModel: ProductViewModel = viewModel(factory = ProductFactory(productRepository))
+    ComponentHomeScreen(navController = navController, context = context, viewModel = viewModel)
 }
 
 @Composable
-private fun ItemProduct(productModel: Products, navController: NavController) {
+private fun ItemProduct(
+    productModel: Products,
+    navController: NavController,
+) {
     Column(modifier = Modifier.clickable {
         navController.navigate("itemProduct")
     }) {
         Box(modifier = Modifier.height(200.dp)) {
             AsyncImage(
                 model = productModel.imgProduct,
-                contentDescription = productModel.id,
-                modifier = Modifier.fillMaxSize()
+                contentDescription = "${productModel.id}",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier
@@ -124,37 +145,7 @@ private fun ItemProduct(productModel: Products, navController: NavController) {
 }
 
 @Composable
-private fun ListProduct(navController: NavController) {
-    val itemsList = listOf(
-        Products(
-            "1",
-            "name1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-        Products(
-            "2",
-            "namure1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-        Products(
-            "3",
-            "narume1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-        Products(
-            "4",
-            "name6u1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-    )
+private fun ListProduct(navController: NavController, listProducts: List<Products>) {
     val state = rememberLazyStaggeredGridState()
 
     LazyVerticalStaggeredGrid(
@@ -167,7 +158,7 @@ private fun ListProduct(navController: NavController) {
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalItemSpacing = 20.dp,
         content = {
-            items(itemsList) { item ->
+            items(listProducts) { item ->
                 ItemProduct(productModel = item, navController = navController)
             }
         }
@@ -258,7 +249,13 @@ private fun BottomNavigationComponent(
 }
 
 @Composable
-private fun ComponentHomeScreen(modifier: Modifier = Modifier, navController: NavController) {
+private fun ComponentHomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    context: Context,
+    viewModel: ProductViewModel
+) {
+    val listProduct by viewModel.getAllProduct.observeAsState(emptyList())
     Surface(modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column {
             Row(
@@ -295,7 +292,7 @@ private fun ComponentHomeScreen(modifier: Modifier = Modifier, navController: Na
             }
             Spacer(modifier.height(15.dp))
             FilterComponent()
-            ListProduct(navController = navController)
+            ListProduct(navController = navController, listProducts = listProduct)
             BottomNavigationComponent()
         }
     }
