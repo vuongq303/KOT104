@@ -1,9 +1,11 @@
-package com.hq.quanhqph33420_assignment.db.products
+package com.hq.quanhqph33420_assignment.database.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.hq.quanhqph33420_assignment.database.repository.ProductRepository
+import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 
-class ProductViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {
+class ProductFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

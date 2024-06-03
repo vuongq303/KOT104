@@ -15,5 +15,5 @@ interface ProductDao {
     suspend fun addProduct(products: Products)
 
     @Query("select * from Products where id= :id")
-    fun getItemProduct(id: String): Products
+    fun getItemProduct(id: Int): LiveData<Products>
 }
