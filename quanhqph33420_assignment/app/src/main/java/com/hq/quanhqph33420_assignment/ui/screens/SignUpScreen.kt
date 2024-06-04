@@ -52,23 +52,17 @@ import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.entities.Users
 
-@Composable
-fun SignUpScreen(navController: NavController) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    val userRepository =
-        UserRepository(MyDatabase.getDatabase(context = context, scope = scope).userDao())
-    val userViewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
-    ComponentSignUp(navController = navController, viewModel = userViewModel)
-}
 
 @Composable
-private fun ComponentSignUp(
+fun SignUpScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: UserViewModel
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val userRepository =
+        UserRepository(MyDatabase.getDatabase(context = context, scope = scope).userDao())
+    val viewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
     var email by remember {
         mutableStateOf("")
     }
@@ -81,7 +75,6 @@ private fun ComponentSignUp(
     var confirmPassword by remember {
         mutableStateOf("")
     }
-    val context = LocalContext.current
     Column(
         modifier
             .fillMaxSize()

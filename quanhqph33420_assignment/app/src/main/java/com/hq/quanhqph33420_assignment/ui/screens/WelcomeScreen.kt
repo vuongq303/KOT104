@@ -28,12 +28,7 @@ import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
-fun WelcomeScreen(navController: NavController) {
-    ComponentWelcome(navController = navController)
-}
-
-@Composable
-private fun ComponentWelcome(modifier: Modifier = Modifier, navController: NavController) {
+fun WelcomeScreen(modifier: Modifier = Modifier, navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painterResource(id = R.drawable.welcome_img),

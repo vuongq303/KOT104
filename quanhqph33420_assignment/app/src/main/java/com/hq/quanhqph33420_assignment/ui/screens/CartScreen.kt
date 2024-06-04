@@ -49,11 +49,6 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.entities.Products
 
 @Composable
-fun CartScreen(navController: NavController) {
-    ComponentCart(navController = navController)
-}
-
-@Composable
 private fun ListItemCart() {
     val itemsList = listOf(
         Products(
@@ -189,7 +184,7 @@ private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ComponentCart(modifier: Modifier = Modifier, navController: NavController) {
+fun CartScreen(modifier: Modifier = Modifier, navController: NavController) {
     Box(
         modifier
             .fillMaxSize()

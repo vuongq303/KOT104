@@ -39,13 +39,7 @@ import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
-fun CheckOutScreen(navController: NavController) {
-    ComponentCheckOut(navController = navController)
-}
-
-
-@Composable
-private fun ComponentCheckOut(modifier: Modifier = Modifier, navController: NavController) {
+ fun CheckOutScreen(modifier: Modifier = Modifier, navController: NavController) {
     val scrollState = rememberScrollState()
     Column(
         modifier

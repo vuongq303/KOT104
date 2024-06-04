@@ -3,7 +3,7 @@ package com.hq.quanhqph33420_assignment.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.hq.quanhqph33420_assignment.ui.screens.AssignmentApp
+import com.hq.quanhqph33420_assignment.nav.ScreenNav
 import com.hq.quanhqph33420_assignment.ui.theme.Quanhqph33420_assignmentTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Quanhqph33420_assignmentTheme {
-                AssignmentApp()
+                ScreenNav()
             }
         }
     }

@@ -32,12 +32,7 @@ import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
-fun NotificationScreen(navController: NavController) {
-    NotificationComponent(navController = navController)
-}
-
-@Composable
-private fun NotificationComponent(modifier: Modifier = Modifier, navController: NavController) {
+fun NotificationScreen(modifier: Modifier = Modifier, navController: NavController) {
     Surface(
         modifier
             .fillMaxSize()

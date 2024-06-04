@@ -52,25 +52,18 @@ import com.hq.quanhqph33420_assignment.database.repository.UserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
+
 @Composable
-fun SignInScreen(navController: NavController) {
+fun SignInScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val userRepository =
         UserRepository(MyDatabase.getDatabase(context = context, scope = scope).userDao())
     val userViewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
 
-    ComponentSignIn(navController = navController, context = context, userViewModel = userViewModel)
-}
-
-
-@Composable
-private fun ComponentSignIn(
-    modifier: Modifier = Modifier,
-    navController: NavController,
-    context: Context,
-    userViewModel: UserViewModel
-) {
     var email by remember {
         mutableStateOf("")
     }

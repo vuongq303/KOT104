@@ -1,6 +1,5 @@
 package com.hq.quanhqph33420_assignment.ui.screens
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -75,16 +74,6 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.entities.Products
 import com.hq.quanhqph33420_assignment.model.FilterIcon
 import com.hq.quanhqph33420_assignment.model.IconItems
-
-@Composable
-fun HomeScreen(navController: NavController) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val productRepository =
-        ProductRepository(MyDatabase.getDatabase(context = context, scope = scope).productDao())
-    val viewModel: ProductViewModel = viewModel(factory = ProductFactory(productRepository))
-    ComponentHomeScreen(navController = navController, context = context, viewModel = viewModel)
-}
 
 @Composable
 private fun ItemProduct(
@@ -249,13 +238,17 @@ private fun BottomNavigationComponent(
 }
 
 @Composable
-private fun ComponentHomeScreen(
+fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    context: Context,
-    viewModel: ProductViewModel
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val productRepository =
+        ProductRepository(MyDatabase.getDatabase(context = context, scope = scope).productDao())
+    val viewModel: ProductViewModel = viewModel(factory = ProductFactory(productRepository))
     val listProduct by viewModel.getAllProduct.observeAsState(emptyList())
+
     Surface(modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column {
             Row(

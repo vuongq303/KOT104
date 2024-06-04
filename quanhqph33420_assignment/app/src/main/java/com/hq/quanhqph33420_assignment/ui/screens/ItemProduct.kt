@@ -42,12 +42,11 @@ import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
-fun ItemProduct(navController: NavController) {
-    ComponentItemProduct(navController = navController)
-}
-
-@Composable
-private fun ComponentItemProduct(modifier: Modifier = Modifier, navController: NavController) {
+fun ItemProduct(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    id: String
+) {
     val scrollSate = rememberScrollState()
     Column(
         modifier
