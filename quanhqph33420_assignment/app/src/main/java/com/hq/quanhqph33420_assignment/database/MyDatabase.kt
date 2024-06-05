@@ -1,21 +1,31 @@
-package com.hq.quanhqph33420_assignment.database.db
+package com.hq.quanhqph33420_assignment.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.hq.quanhqph33420_assignment.database.dao.CartDao
 import com.hq.quanhqph33420_assignment.database.dao.ProductDao
+import com.hq.quanhqph33420_assignment.database.dao.SaveUserDao
 import com.hq.quanhqph33420_assignment.database.dao.UserDao
-import com.hq.quanhqph33420_assignment.model.entities.Products
-import com.hq.quanhqph33420_assignment.model.entities.Users
+import com.hq.quanhqph33420_assignment.database.entities.Carts
+import com.hq.quanhqph33420_assignment.database.entities.Products
+import com.hq.quanhqph33420_assignment.database.entities.SaveUsers
+import com.hq.quanhqph33420_assignment.database.entities.Users
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Users::class, Products::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Users::class, Products::class, Carts::class, SaveUsers::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class MyDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
+    abstract fun cartDao(): CartDao
+    abstract fun saveUserDao(): SaveUserDao
 
     companion object {
         @Volatile

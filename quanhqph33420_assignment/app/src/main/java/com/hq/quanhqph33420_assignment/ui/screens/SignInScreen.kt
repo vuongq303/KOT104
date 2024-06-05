@@ -27,6 +27,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,30 +47,58 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hq.quanhqph33420_assignment.R
-import com.hq.quanhqph33420_assignment.database.db.MyDatabase
+import com.hq.quanhqph33420_assignment.database.MyDatabase
+import com.hq.quanhqph33420_assignment.database.entities.SaveUsers
+import com.hq.quanhqph33420_assignment.database.factory.SaveUserFactory
 import com.hq.quanhqph33420_assignment.database.factory.UserFactory
+import com.hq.quanhqph33420_assignment.database.repository.SaveUserRepository
 import com.hq.quanhqph33420_assignment.database.repository.UserRepository
+import com.hq.quanhqph33420_assignment.database.viewModel.SaveUserViewModel
 import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
-
 @Composable
-fun SignInScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
-) {
+fun SignInScreen(navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    //save user when sign up
     val userRepository =
         UserRepository(MyDatabase.getDatabase(context = context, scope = scope).userDao())
     val userViewModel: UserViewModel = viewModel(factory = UserFactory(userRepository))
 
+    //save information
+    val saveUserRepository =
+        SaveUserRepository(MyDatabase.getDatabase(context, scope).saveUserDao())
+    val saveUserViewModel: SaveUserViewModel =
+        viewModel(factory = SaveUserFactory(saveUserRepository))
+
+    //call component
+    SignInScreenComponent(
+        navController = navController,
+        userViewModel = userViewModel,
+        context = context,
+        saveUserViewModel = saveUserViewModel
+    )
+}
+
+@Composable
+private fun SignInScreenComponent(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    userViewModel: UserViewModel,
+    saveUserViewModel: SaveUserViewModel,
+    context: Context
+) {
     var email by remember {
         mutableStateOf("")
     }
     var password by remember {
         mutableStateOf("")
     }
+
+    val saveUser by saveUserViewModel.getUser.observeAsState(
+        null
+    )
 
     Column(
         modifier
@@ -181,6 +210,14 @@ fun SignInScreen(
                                 if (listItem.size == 1) {
                                     Toast.makeText(context, "Login complete!", Toast.LENGTH_SHORT)
                                         .show()
+
+                                    // Save email of user
+                                    if (saveUser == null) saveUserViewModel.addUser(
+                                        SaveUsers(
+                                            1,
+                                            email
+                                        )
+                                    )
                                     navController.navigate("home")
                                 } else {
                                     Toast.makeText(

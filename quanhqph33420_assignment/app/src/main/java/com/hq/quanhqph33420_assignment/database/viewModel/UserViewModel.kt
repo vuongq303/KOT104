@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hq.quanhqph33420_assignment.database.repository.UserRepository
-import com.hq.quanhqph33420_assignment.model.entities.Users
+import com.hq.quanhqph33420_assignment.database.entities.Users
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository) : ViewModel() {

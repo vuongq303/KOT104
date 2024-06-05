@@ -2,7 +2,7 @@ package com.hq.quanhqph33420_assignment.database.repository
 
 import androidx.lifecycle.LiveData
 import com.hq.quanhqph33420_assignment.database.dao.UserDao
-import com.hq.quanhqph33420_assignment.model.entities.Users
+import com.hq.quanhqph33420_assignment.database.entities.Users
 
 class UserRepository(private val userDao: UserDao) {
     fun userSignIn(email: String, password: String): LiveData<List<Users>> =

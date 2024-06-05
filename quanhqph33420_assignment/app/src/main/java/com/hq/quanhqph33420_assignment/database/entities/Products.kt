@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.model.entities
+package com.hq.quanhqph33420_assignment.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,4 +11,4 @@ data class Products(
     val imgProduct: String,
     val priceProduct: Int,
     val rate: Int
-) {}
+)

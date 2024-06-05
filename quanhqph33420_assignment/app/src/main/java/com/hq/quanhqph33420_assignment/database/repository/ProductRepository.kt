@@ -2,7 +2,7 @@ package com.hq.quanhqph33420_assignment.database.repository
 
 import androidx.lifecycle.LiveData
 import com.hq.quanhqph33420_assignment.database.dao.ProductDao
-import com.hq.quanhqph33420_assignment.model.entities.Products
+import com.hq.quanhqph33420_assignment.database.entities.Products
 
 class ProductRepository(private val productDao: ProductDao) {
     val getAllProduct: LiveData<List<Products>> = productDao.getAllProduct()

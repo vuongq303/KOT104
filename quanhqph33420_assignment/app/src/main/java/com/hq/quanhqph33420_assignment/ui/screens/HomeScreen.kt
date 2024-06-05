@@ -60,28 +60,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.hq.quanhqph33420_assignment.R
-import com.hq.quanhqph33420_assignment.database.db.MyDatabase
+import com.hq.quanhqph33420_assignment.database.MyDatabase
+import com.hq.quanhqph33420_assignment.database.entities.Products
 import com.hq.quanhqph33420_assignment.database.factory.ProductFactory
 import com.hq.quanhqph33420_assignment.database.repository.ProductRepository
-import com.hq.quanhqph33420_assignment.database.repository.UserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
-import com.hq.quanhqph33420_assignment.model.entities.Products
 import com.hq.quanhqph33420_assignment.model.FilterIcon
 import com.hq.quanhqph33420_assignment.model.IconItems
 
+@Composable
+fun HomeScreen(navController: NavController) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val productRepository =
+        ProductRepository(MyDatabase.getDatabase(context = context, scope = scope).productDao())
+    val viewModel: ProductViewModel = viewModel(factory = ProductFactory(productRepository))
+    val listProduct by viewModel.getAllProduct.observeAsState(emptyList())
+    ComponentHomeScreen(
+        navController = navController,
+        listProduct = listProduct
+    )
+}
 @Composable
 private fun ItemProduct(
     productModel: Products,
     navController: NavController,
 ) {
     Column(modifier = Modifier.clickable {
-        navController.navigate("itemProduct")
+        navController.navigate("itemProduct/${productModel.id}")
     }) {
         Box(modifier = Modifier.height(200.dp)) {
             AsyncImage(
@@ -236,19 +247,12 @@ private fun BottomNavigationComponent(
         Text(text = "", modifier.padding(e))
     }
 }
-
 @Composable
-fun HomeScreen(
+private fun ComponentHomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
+    listProduct: List<Products>
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val productRepository =
-        ProductRepository(MyDatabase.getDatabase(context = context, scope = scope).productDao())
-    val viewModel: ProductViewModel = viewModel(factory = ProductFactory(productRepository))
-    val listProduct by viewModel.getAllProduct.observeAsState(emptyList())
-
     Surface(modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column {
             Row(

@@ -45,12 +45,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hq.quanhqph33420_assignment.R
-import com.hq.quanhqph33420_assignment.database.db.MyDatabase
+import com.hq.quanhqph33420_assignment.database.MyDatabase
+import com.hq.quanhqph33420_assignment.database.entities.Users
 import com.hq.quanhqph33420_assignment.database.factory.UserFactory
 import com.hq.quanhqph33420_assignment.database.repository.UserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
-import com.hq.quanhqph33420_assignment.model.entities.Users
 
 
 @Composable
@@ -194,7 +194,7 @@ fun SignUpScreen(
                             Toast.makeText(context, "Password not match!", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
-                            val result = viewModel.userSignUp(Users(1, email, name, password))
+                            val result = viewModel.userSignUp(Users(0, email, name, password))
                             Toast.makeText(context, "$result", Toast.LENGTH_SHORT).show()
                         }
                     },
