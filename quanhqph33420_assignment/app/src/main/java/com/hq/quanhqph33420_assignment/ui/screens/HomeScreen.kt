@@ -72,6 +72,7 @@ import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.FilterIcon
 import com.hq.quanhqph33420_assignment.model.IconItems
+import com.hq.quanhqph33420_assignment.nav.Screens
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -86,6 +87,7 @@ fun HomeScreen(navController: NavController) {
         listProduct = listProduct
     )
 }
+
 @Composable
 private fun ItemProduct(
     productModel: Products,
@@ -247,6 +249,7 @@ private fun BottomNavigationComponent(
         Text(text = "", modifier.padding(e))
     }
 }
+
 @Composable
 private fun ComponentHomeScreen(
     modifier: Modifier = Modifier,
@@ -283,7 +286,7 @@ private fun ComponentHomeScreen(
                         fontFamily = GoogleFont.GelasioFont
                     )
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { navController.navigate(Screens.cart) }) {
                     Icon(Icons.Outlined.ShoppingCart, contentDescription = null)
                 }
             }

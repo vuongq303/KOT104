@@ -17,32 +17,32 @@ import com.hq.quanhqph33420_assignment.ui.screens.WelcomeScreen
 fun ScreenNav() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "welcome") {
-        composable("welcome") {
+        composable(Screens.welcome) {
             WelcomeScreen(navController = navController)
         }
-        composable("signin") {
+        composable(Screens.signin) {
             SignInScreen(navController = navController)
         }
-        composable("signup") {
+        composable(Screens.signUp) {
             SignUpScreen(navController = navController)
         }
-        composable("home") {
+        composable(Screens.home) {
             HomeScreen(navController = navController)
         }
-        composable("itemProduct/{id}") { backStack ->
+        composable("${Screens.itemProduct}/{id}") { backStack ->
             val id = backStack.arguments?.getString("id")
             ItemProduct(
                 navController = navController,
                 id = id ?: ""
             )
         }
-        composable("cart") {
+        composable(Screens.cart) {
             CartScreen(navController = navController)
         }
-        composable("checkout") {
+        composable(Screens.checkOut) {
             CheckOutScreen(navController = navController)
         }
-        composable("notification") {
+        composable(Screens.notification) {
             NotificationScreen(navController = navController)
         }
     }

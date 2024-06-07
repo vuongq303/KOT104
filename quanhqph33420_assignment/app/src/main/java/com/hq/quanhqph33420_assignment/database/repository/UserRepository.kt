@@ -11,4 +11,6 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun userSignUp(users: Users) {
         userDao.userSignUp(users)
     }
+
+    fun getUser(email: String): LiveData<Users> = userDao.getUser(email)
 }

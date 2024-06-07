@@ -1,6 +1,5 @@
 package com.hq.quanhqph33420_assignment.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +25,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,6 +51,7 @@ import com.hq.quanhqph33420_assignment.database.factory.UserFactory
 import com.hq.quanhqph33420_assignment.database.repository.UserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
+import com.hq.quanhqph33420_assignment.utils.AppUtils
 
 
 @Composable
@@ -75,6 +76,7 @@ fun SignUpScreen(
     var confirmPassword by remember {
         mutableStateOf("")
     }
+    val userExist by viewModel.getUser(email).observeAsState(null)
     Column(
         modifier
             .fillMaxSize()
@@ -95,22 +97,19 @@ fun SignUpScreen(
             )
             Row(
                 modifier.border(
-                    1.dp,
-                    Color.Black, RoundedCornerShape(100.dp)
+                    1.dp, Color.Black, RoundedCornerShape(100.dp)
                 )
             ) {
                 Icon(
-                    painterResource(id = R.drawable.sofa), contentDescription = "",
+                    painterResource(id = R.drawable.sofa),
+                    contentDescription = "",
                     modifier
                         .size(40.dp)
                         .padding(5.dp)
                 )
             }
             Divider(
-                thickness = 1.dp,
-                modifier = Modifier
-                    .padding(20.dp),
-                color = Color(0xFFBDBDBD)
+                thickness = 1.dp, modifier = Modifier.padding(20.dp), color = Color(0xFFBDBDBD)
             )
         }
         Text(
@@ -138,8 +137,7 @@ fun SignUpScreen(
                         .fillMaxWidth()
                         .padding(10.dp, 0.dp, 0.dp, 0.dp),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
                     )
                 )
                 Spacer(modifier.height(20.dp))
@@ -151,8 +149,7 @@ fun SignUpScreen(
                         .fillMaxWidth()
                         .padding(10.dp, 0.dp, 0.dp, 0.dp),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
                     )
                 )
                 Spacer(modifier.height(20.dp))
@@ -165,8 +162,7 @@ fun SignUpScreen(
                         .padding(10.dp, 0.dp, 0.dp, 0.dp),
                     visualTransformation = PasswordVisualTransformation(),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
                     )
                 )
                 Spacer(modifier.height(20.dp))
@@ -179,8 +175,7 @@ fun SignUpScreen(
                         .padding(10.dp, 0.dp, 0.dp, 0.dp),
                     visualTransformation = PasswordVisualTransformation(),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
                     )
                 )
             }
@@ -188,15 +183,23 @@ fun SignUpScreen(
             Column(modifier.fillMaxHeight(1f), verticalArrangement = Arrangement.Center) {
                 Button(
                     onClick = {
-                        if (email.isEmpty() && name.isEmpty() && password.isEmpty() && confirmPassword.isEmpty()) {
-                            Toast.makeText(context, "Data empty!", Toast.LENGTH_SHORT).show()
-                        } else if (password != confirmPassword) {
-                            Toast.makeText(context, "Password not match!", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            val result = viewModel.userSignUp(Users(0, email, name, password))
-                            Toast.makeText(context, "$result", Toast.LENGTH_SHORT).show()
+                        when {
+                            email.isEmpty() && name.isEmpty() && password.isEmpty() && confirmPassword.isEmpty() -> AppUtils.ToastUtils(
+                                context, "Data empty!"
+                            )
+
+                            password != confirmPassword -> AppUtils.ToastUtils(
+                                context, "Password not match!"
+                            )
+
+                            userExist == null -> {
+                                val result = viewModel.userSignUp(Users(0, email, name, password))
+                                AppUtils.ToastUtils(context, "$result")
+                            }
+
+                            else -> AppUtils.ToastUtils(context, "Account exist!")
                         }
+
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                     shape = RoundedCornerShape(10.dp),
@@ -224,11 +227,9 @@ fun SignUpScreen(
                         fontWeight = FontWeight(600)
                     )
                     ClickableText(
-                        text = AnnotatedString("SIGN IN"),
-                        onClick = {
+                        text = AnnotatedString("SIGN IN"), onClick = {
                             navController.navigate("signin")
-                        },
-                        style = TextStyle(
+                        }, style = TextStyle(
                             textAlign = TextAlign.Center,
                             fontSize = 14.sp,
                             fontWeight = FontWeight(700)

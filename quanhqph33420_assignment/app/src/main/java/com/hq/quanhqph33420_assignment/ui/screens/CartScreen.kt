@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,60 +34,59 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.hq.quanhqph33420_assignment.database.MyDatabase
+import com.hq.quanhqph33420_assignment.database.entities.Carts
+import com.hq.quanhqph33420_assignment.database.factory.CartFactory
+import com.hq.quanhqph33420_assignment.database.factory.SaveUserFactory
+import com.hq.quanhqph33420_assignment.database.repository.CartRepository
+import com.hq.quanhqph33420_assignment.database.repository.SaveUserRepository
+import com.hq.quanhqph33420_assignment.database.viewModel.CartViewModel
+import com.hq.quanhqph33420_assignment.database.viewModel.SaveUserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
-import com.hq.quanhqph33420_assignment.database.entities.Products
+import com.hq.quanhqph33420_assignment.ui.component.DialogConfirm
+import com.hq.quanhqph33420_assignment.ui.component.HeaderToolBar
+import com.hq.quanhqph33420_assignment.ui.component.LoadingScreen
+
+var cartItems: Carts? = null
 
 @Composable
-private fun ListItemCart() {
-    val itemsList = listOf(
-        Products(
-            1,
-            "name1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-        Products(
-            2,
-            "namure1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-        Products(
-            3,
-            "narume1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-        Products(
-            4,
-            "name6u1",
-            "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
-            40,
-            5
-        ),
-    )
+private fun ListItemCart(cartViewModel: CartViewModel, email: String, openDialog: () -> Unit = {}) {
+    val itemsList by cartViewModel.getItemInCart(email).observeAsState(emptyList())
     LazyColumn {
         items(itemsList) { item ->
-            ItemCard(item = item)
+            ItemCard(item = item, openDialog = openDialog, cartViewModel = cartViewModel)
         }
     }
 }
 
 @Composable
-private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
+private fun ItemCard(
+    item: Carts,
+    modifier: Modifier = Modifier,
+    openDialog: () -> Unit,
+    cartViewModel: CartViewModel
+) {
+    var quantity by remember {
+        mutableIntStateOf(item.quantity)
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +121,10 @@ private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
                         .fillMaxWidth(),
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            openDialog()
+                            cartItems = item
+                        },
                         modifier = Modifier.background(Color.White)
                     ) {
                         Icon(
@@ -156,13 +157,18 @@ private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
                             Color(0xFFE0E0E0)
                         )
                     ) {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = {
+                            quantity++
+                            val newCart = item
+                            item.quantity = quantity
+                            cartViewModel.updateInCart(newCart)
+                        }) {
                             Icon(Icons.Default.Add, contentDescription = null)
                         }
                     }
                     Spacer(modifier.width(10.dp))
                     Text(
-                        text = "01",
+                        text = "$quantity",
                         fontFamily = GoogleFont.NunitoSansFont,
                         fontSize = 18.sp,
                         fontWeight = FontWeight(600),
@@ -170,7 +176,12 @@ private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
                     )
                     Spacer(modifier.width(10.dp))
                     Card(modifier.size(30.dp), shape = RoundedCornerShape(5.dp)) {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = {
+                            if (quantity > 1) quantity--
+                            val newCart = item
+                            item.quantity = quantity
+                            cartViewModel.updateInCart(newCart)
+                        }) {
                             Icon(
                                 Icons.Filled.RemoveCircleOutline,
                                 contentDescription = null,
@@ -185,34 +196,55 @@ private fun ItemCard(item: Products, modifier: Modifier = Modifier) {
 
 @Composable
 fun CartScreen(modifier: Modifier = Modifier, navController: NavController) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val cartRepository = CartRepository(MyDatabase.getDatabase(context, scope).cartDao())
+    val saveUserRepository =
+        SaveUserRepository(MyDatabase.getDatabase(context, scope).saveUserDao())
+    val cartViewModel: CartViewModel = viewModel(factory = CartFactory(cartRepository))
+    val saveUserViewModel: SaveUserViewModel =
+        viewModel(factory = SaveUserFactory(saveUserRepository))
+
+    val saveUser by saveUserViewModel.getUser.observeAsState(null)
+
+    var dialogShow by remember {
+        mutableStateOf(false)
+    }
+    var priceTotal by remember {
+        mutableIntStateOf(0)
+    }
+    if (saveUser != null) {
+        cartViewModel.getTotalPrice(saveUser!!.email)
+        val total by cartViewModel.totalPrice.observeAsState(0)
+        priceTotal = total
+    }
+    when {
+        dialogShow -> DialogConfirm(
+            onDismissRequest = { dialogShow = false },
+            onConfirmation = { cartViewModel.removeFromCart(cartItems!!);dialogShow = false },
+            dialogTitle = "Remove product",
+            dialogText = "Remove product from cart?"
+        )
+    }
+
     Box(
         modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Column {
-            Row(
-                modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "",
-                    )
-                }
-                Text(
-                    text = "My Cart",
-                    modifier = Modifier.fillMaxWidth(0.7f),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight(700),
-                    fontSize = 16.sp,
-                    fontFamily = GoogleFont.MerriweatherFont
+            HeaderToolBar(navController = navController, title = "My Cart")
+            when {
+                saveUser != null -> ListItemCart(
+                    cartViewModel = cartViewModel,
+                    email = saveUser!!.email,
+                    openDialog = { dialogShow = true }
                 )
-                Spacer(modifier.fillMaxWidth(0.35f))
+
+                else -> LoadingScreen()
             }
-            ListItemCart()
+
         }
         Column(
             modifier = Modifier
@@ -277,7 +309,7 @@ fun CartScreen(modifier: Modifier = Modifier, navController: NavController) {
                     fontFamily = GoogleFont.NunitoSansFont
                 )
                 Text(
-                    text = "$44",
+                    text = "$priceTotal",
                     fontSize = 20.sp,
                     fontWeight = FontWeight(700),
                     fontFamily = GoogleFont.NunitoSansFont

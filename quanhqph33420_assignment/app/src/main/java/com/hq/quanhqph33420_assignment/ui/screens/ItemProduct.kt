@@ -334,6 +334,9 @@ private fun ItemProductView(
                                             id = 0,
                                             email = saveUser!!.email,
                                             idProduct = products.id,
+                                            nameProduct = products.nameProduct,
+                                            imgProduct = products.imgProduct,
+                                            priceProduct = products.priceProduct,
                                             quantity = counts
                                         )
                                     )

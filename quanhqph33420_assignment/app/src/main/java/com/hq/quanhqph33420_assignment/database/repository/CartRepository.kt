@@ -13,5 +13,9 @@ class CartRepository(private val cartDao: CartDao) {
         cartDao.removeFromCart(carts)
     }
 
-    fun getItemInCart(email:String): LiveData<List<Carts>> = cartDao.getItemInCart(email)
+    suspend fun updateInCart(carts: Carts) {
+        cartDao.updateInCart(carts)
+    }
+
+    fun getItemInCart(email: String): LiveData<List<Carts>> = cartDao.getItemInCart(email)
 }
