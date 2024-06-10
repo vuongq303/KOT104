@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
+import com.hq.quanhqph33420_assignment.nav.Screens
 
 @Composable
 fun NotificationScreen(modifier: Modifier = Modifier, navController: NavController) {
@@ -113,7 +114,12 @@ fun NotificationScreen(modifier: Modifier = Modifier, navController: NavControll
                 }
                 Spacer(modifier.height(20.dp))
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate(Screens.home) {
+                            popUpTo(Screens.notification)
+                            { inclusive = false }
+                        }
+                    },
                     modifier.height(60.dp),
                     shape = RoundedCornerShape(8.dp)
                 ) {

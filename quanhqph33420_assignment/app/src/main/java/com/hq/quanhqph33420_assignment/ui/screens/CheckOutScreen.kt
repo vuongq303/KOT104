@@ -39,7 +39,7 @@ import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
- fun CheckOutScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun CheckOutScreen(modifier: Modifier = Modifier, navController: NavController, total: String) {
     val scrollState = rememberScrollState()
     Column(
         modifier
@@ -52,7 +52,7 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     Icons.Default.KeyboardArrowLeft,
                     contentDescription = "",
@@ -194,7 +194,7 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
                     color = Color(0xFF909090),
                 )
                 Text(
-                    text = "$95.00",
+                    text = total,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(600),
                     fontFamily = GoogleFont.NunitoSansFont,
@@ -215,7 +215,7 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
                     color = Color(0xFF909090),
                 )
                 Text(
-                    text = "$15.00",
+                    text = "$ ${total.toInt() / 10}",
                     fontSize = 18.sp,
                     fontWeight = FontWeight(600),
                     fontFamily = GoogleFont.NunitoSansFont,
@@ -236,7 +236,7 @@ import com.hq.quanhqph33420_assignment.font.GoogleFont
                     color = Color(0xFF909090),
                 )
                 Text(
-                    text = "$115.00",
+                    text = "$ ${total.toInt() + total.toInt() / 10}",
                     fontSize = 18.sp,
                     fontWeight = FontWeight(700),
                     fontFamily = GoogleFont.NunitoSansFont,

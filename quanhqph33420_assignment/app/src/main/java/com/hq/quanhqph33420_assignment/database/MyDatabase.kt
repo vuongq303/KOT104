@@ -6,10 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hq.quanhqph33420_assignment.database.dao.CartDao
+import com.hq.quanhqph33420_assignment.database.dao.FavoriteDao
 import com.hq.quanhqph33420_assignment.database.dao.ProductDao
 import com.hq.quanhqph33420_assignment.database.dao.SaveUserDao
 import com.hq.quanhqph33420_assignment.database.dao.UserDao
 import com.hq.quanhqph33420_assignment.database.entities.Carts
+import com.hq.quanhqph33420_assignment.database.entities.Favorites
 import com.hq.quanhqph33420_assignment.database.entities.Products
 import com.hq.quanhqph33420_assignment.database.entities.SaveUsers
 import com.hq.quanhqph33420_assignment.database.entities.Users
@@ -17,7 +19,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [Users::class, Products::class, Carts::class, SaveUsers::class],
+    entities = [
+        Users::class,
+        Products::class,
+        Carts::class,
+        SaveUsers::class,
+        Favorites::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -26,6 +34,7 @@ abstract class MyDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun cartDao(): CartDao
     abstract fun saveUserDao(): SaveUserDao
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
         @Volatile
@@ -42,7 +51,7 @@ abstract class MyDatabase : RoomDatabase() {
             }
         }
 
-        class ProductDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+        class ProductDatabaseCallback(private val scope: CoroutineScope) : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 INSTANCE?.let { database ->

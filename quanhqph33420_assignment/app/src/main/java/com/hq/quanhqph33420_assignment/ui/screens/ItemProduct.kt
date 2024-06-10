@@ -52,18 +52,23 @@ import coil.compose.AsyncImage
 import com.hq.quanhqph33420_assignment.R
 import com.hq.quanhqph33420_assignment.database.MyDatabase
 import com.hq.quanhqph33420_assignment.database.entities.Carts
+import com.hq.quanhqph33420_assignment.database.entities.Favorites
 import com.hq.quanhqph33420_assignment.database.entities.Products
 import com.hq.quanhqph33420_assignment.database.factory.CartFactory
+import com.hq.quanhqph33420_assignment.database.factory.FavoriteFactory
 import com.hq.quanhqph33420_assignment.database.factory.ProductFactory
 import com.hq.quanhqph33420_assignment.database.factory.SaveUserFactory
 import com.hq.quanhqph33420_assignment.database.repository.CartRepository
+import com.hq.quanhqph33420_assignment.database.repository.FavoriteRepository
 import com.hq.quanhqph33420_assignment.database.repository.ProductRepository
 import com.hq.quanhqph33420_assignment.database.repository.SaveUserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.CartViewModel
+import com.hq.quanhqph33420_assignment.database.viewModel.FavoriteViewModel
 import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 import com.hq.quanhqph33420_assignment.database.viewModel.SaveUserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.ui.component.LoadingScreen
+import com.hq.quanhqph33420_assignment.utils.AppUtils
 
 @Composable
 fun ItemProduct(navController: NavController, id: String) {
@@ -86,12 +91,18 @@ fun ItemProduct(navController: NavController, id: String) {
     val saveUserViewModel: SaveUserViewModel =
         viewModel(factory = SaveUserFactory(saveUserRepository))
 
+    val favoriteRepository =
+        FavoriteRepository(MyDatabase.getDatabase(context, scope).favoriteDao())
+    val favoriteViewModel: FavoriteViewModel =
+        viewModel(factory = FavoriteFactory(favoriteRepository))
+
     ComponentItemProduct(
         navController = navController,
         id = id,
         cartViewModel = cartViewModel,
         productViewModel = productViewModel,
         saveUserViewModel = saveUserViewModel,
+        favoriteViewModel = favoriteViewModel,
         context = context
     )
 }
@@ -103,6 +114,7 @@ private fun ComponentItemProduct(
     cartViewModel: CartViewModel,
     productViewModel: ProductViewModel,
     saveUserViewModel: SaveUserViewModel,
+    favoriteViewModel: FavoriteViewModel,
     context: Context
 ) {
     val itemProduct by productViewModel.getItemProduct(id.toInt()).observeAsState()
@@ -113,6 +125,7 @@ private fun ComponentItemProduct(
             products = itemProduct!!,
             cartViewModel = cartViewModel,
             saveUserViewModel = saveUserViewModel,
+            favoriteViewModel = favoriteViewModel,
             context = context
         )
 
@@ -128,6 +141,7 @@ private fun ItemProductView(
     products: Products,
     cartViewModel: CartViewModel,
     saveUserViewModel: SaveUserViewModel,
+    favoriteViewModel: FavoriteViewModel,
     context: Context
 ) {
 
@@ -314,7 +328,26 @@ private fun ItemProductView(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             // add to favorite
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = {
+                                when {
+                                    saveUser != null -> {
+                                        favoriteViewModel.addToFavorite(
+                                            Favorites(
+                                                0,
+                                                products.id,
+                                                products.nameProduct,
+                                                products.imgProduct,
+                                                products.priceProduct,
+                                                saveUser!!.email
+                                            )
+                                        )
+                                        AppUtils.ToastUtils(
+                                            context,
+                                            "Add to favorite ${products.nameProduct}!"
+                                        )
+                                    }
+                                }
+                            }) {
                                 Icon(Icons.Outlined.Favorite, contentDescription = null)
                             }
                         }

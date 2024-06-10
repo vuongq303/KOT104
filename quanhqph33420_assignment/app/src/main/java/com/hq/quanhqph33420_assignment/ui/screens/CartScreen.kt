@@ -214,11 +214,13 @@ fun CartScreen(modifier: Modifier = Modifier, navController: NavController) {
     var priceTotal by remember {
         mutableIntStateOf(0)
     }
+
     if (saveUser != null) {
         cartViewModel.getTotalPrice(saveUser!!.email)
         val total by cartViewModel.totalPrice.observeAsState(0)
         priceTotal = total
     }
+
     when {
         dialogShow -> DialogConfirm(
             onDismissRequest = { dialogShow = false },
@@ -316,7 +318,9 @@ fun CartScreen(modifier: Modifier = Modifier, navController: NavController) {
                 )
             }
             Button(
-                onClick = { navController.navigate("checkout") }, shape = RoundedCornerShape(8.dp),
+                onClick = {
+                    navController.navigate("checkout")
+                }, shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),

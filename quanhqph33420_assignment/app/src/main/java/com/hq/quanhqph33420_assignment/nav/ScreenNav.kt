@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hq.quanhqph33420_assignment.ui.screens.CartScreen
 import com.hq.quanhqph33420_assignment.ui.screens.CheckOutScreen
+import com.hq.quanhqph33420_assignment.ui.screens.FavoriteScreen
 import com.hq.quanhqph33420_assignment.ui.screens.HomeScreen
 import com.hq.quanhqph33420_assignment.ui.screens.ItemProduct
 import com.hq.quanhqph33420_assignment.ui.screens.NotificationScreen
@@ -39,12 +40,15 @@ fun ScreenNav() {
         composable(Screens.cart) {
             CartScreen(navController = navController)
         }
-        composable(Screens.checkOut) {
-            CheckOutScreen(navController = navController)
+        composable("${Screens.checkOut}/{total}") { backStack ->
+            val total = backStack.arguments?.getString("total")
+            CheckOutScreen(navController = navController, total = total ?: "")
         }
         composable(Screens.notification) {
             NotificationScreen(navController = navController)
         }
+        composable(Screens.favorite) {
+            FavoriteScreen(navController = navController)
+        }
     }
-
 }

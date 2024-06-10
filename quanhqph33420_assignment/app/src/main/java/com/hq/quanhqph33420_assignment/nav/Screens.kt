@@ -10,5 +10,6 @@ class Screens {
         val cart = "cart"
         val checkOut = "checkout"
         val notification = "notification"
+        val favorite = "favorite"
     }
 }
