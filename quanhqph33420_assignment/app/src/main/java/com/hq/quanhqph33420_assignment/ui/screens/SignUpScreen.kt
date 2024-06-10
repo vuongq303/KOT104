@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -76,6 +78,7 @@ fun SignUpScreen(
     var confirmPassword by remember {
         mutableStateOf("")
     }
+    val scrollForm = rememberScrollState()
     val userExist by viewModel.getUser(email).observeAsState(null)
     Column(
         modifier
@@ -122,119 +125,127 @@ fun SignUpScreen(
         Spacer(modifier.height(20.dp))
         Card(
             modifier
-                .fillMaxHeight(0.8f)
+                .fillMaxHeight(0.9f)
                 .fillMaxWidth()
                 .padding(0.dp, 0.dp, 20.dp, 0.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
             colors = CardDefaults.cardColors(Color.White)
         ) {
-            Column(modifier.fillMaxHeight(0.7f), verticalArrangement = Arrangement.Center) {
-                TextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(text = "Name") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
-                    )
-                )
-                Spacer(modifier.height(20.dp))
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(text = "Email") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
-                    )
-                )
-                Spacer(modifier.height(20.dp))
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = "Password") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
-                    )
-                )
-                Spacer(modifier.height(20.dp))
-                TextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = { Text(text = "Confirm Password") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White, focusedContainerColor = Color.White
-                    )
-                )
-            }
-
-            Column(modifier.fillMaxHeight(1f), verticalArrangement = Arrangement.Center) {
-                Button(
-                    onClick = {
-                        when {
-                            email.isEmpty() && name.isEmpty() && password.isEmpty() && confirmPassword.isEmpty() -> AppUtils.ToastUtils(
-                                context, "Data empty!"
-                            )
-
-                            password != confirmPassword -> AppUtils.ToastUtils(
-                                context, "Password not match!"
-                            )
-
-                            userExist == null -> {
-                                val result = viewModel.userSignUp(Users(0, email, name, password))
-                                AppUtils.ToastUtils(context, "$result")
-                            }
-
-                            else -> AppUtils.ToastUtils(context, "Account exist!")
-                        }
-
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp, 0.dp)
-                        .height(50.dp)
-                ) {
-                    Text(
-                        text = "Sign Up",
-                        fontSize = 18.sp,
-                        fontFamily = GoogleFont.NunitoSansFont,
-                        fontWeight = FontWeight(600)
-                    )
-                }
-                Spacer(modifier.height(20.dp))
-                Row(
-                    modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Already have account?",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight(600)
-                    )
-                    ClickableText(
-                        text = AnnotatedString("SIGN IN"), onClick = {
-                            navController.navigate("signin")
-                        }, style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight(700)
+            Column(modifier.verticalScroll(scrollForm)) {
+                Column(modifier.fillMaxHeight(0.8f), verticalArrangement = Arrangement.Top) {
+                    TextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text(text = "Name") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White
                         )
                     )
+                    Spacer(modifier.height(20.dp))
+                    TextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = "Email") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White
+                        )
+                    )
+                    Spacer(modifier.height(20.dp))
+                    TextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(text = "Password") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                        visualTransformation = PasswordVisualTransformation(),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White
+                        )
+                    )
+                    Spacer(modifier.height(20.dp))
+                    TextField(
+                        value = confirmPassword,
+                        onValueChange = { confirmPassword = it },
+                        label = { Text(text = "Confirm Password") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                        visualTransformation = PasswordVisualTransformation(),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White
+                        )
+                    )
+                    Spacer(modifier.height(30.dp))
+                }
+
+                Column(modifier.fillMaxHeight(1f), verticalArrangement = Arrangement.Center) {
+                    Button(
+                        onClick = {
+                            when {
+                                email.isEmpty() && name.isEmpty() && password.isEmpty() && confirmPassword.isEmpty() -> AppUtils.ToastUtils(
+                                    context, "Data empty!"
+                                )
+
+                                password != confirmPassword -> AppUtils.ToastUtils(
+                                    context, "Password not match!"
+                                )
+
+                                userExist == null -> {
+                                    val result =
+                                        viewModel.userSignUp(Users(0, email, name, password))
+                                    AppUtils.ToastUtils(context, "$result")
+                                }
+
+                                else -> AppUtils.ToastUtils(context, "Account exist!")
+                            }
+
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp, 0.dp)
+                            .height(50.dp)
+                    ) {
+                        Text(
+                            text = "Sign Up",
+                            fontSize = 18.sp,
+                            fontFamily = GoogleFont.NunitoSansFont,
+                            fontWeight = FontWeight(600)
+                        )
+                    }
+                    Spacer(modifier.height(20.dp))
+                    Row(
+                        modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Already have account?",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(600)
+                        )
+                        ClickableText(
+                            text = AnnotatedString("SIGN IN"), onClick = {
+                                navController.navigate("signin")
+                            }, style = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight(700)
+                            )
+                        )
+                    }
                 }
             }
         }

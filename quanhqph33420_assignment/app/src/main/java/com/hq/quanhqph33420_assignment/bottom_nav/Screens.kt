@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.nav
+package com.hq.quanhqph33420_assignment.bottom_nav
 
 class Screens {
     companion object {
@@ -11,5 +11,8 @@ class Screens {
         val checkOut = "checkout"
         val notification = "notification"
         val favorite = "favorite"
+        val bottomApp = "bottomapp"
+        val notificationBottom = "notification"
+        val person = "person"
     }
 }

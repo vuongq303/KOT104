@@ -1,4 +1,4 @@
-package com.hq.quanhqph33420_assignment.nav
+package com.hq.quanhqph33420_assignment.bottom_nav
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -21,14 +21,14 @@ fun ScreenNav() {
         composable(Screens.welcome) {
             WelcomeScreen(navController = navController)
         }
+        composable(Screens.bottomApp) {
+            BottomApp(navControllerMain = navController)
+        }
         composable(Screens.signin) {
             SignInScreen(navController = navController)
         }
         composable(Screens.signUp) {
             SignUpScreen(navController = navController)
-        }
-        composable(Screens.home) {
-            HomeScreen(navController = navController)
         }
         composable("${Screens.itemProduct}/{id}") { backStack ->
             val id = backStack.arguments?.getString("id")
@@ -46,6 +46,9 @@ fun ScreenNav() {
         }
         composable(Screens.notification) {
             NotificationScreen(navController = navController)
+        }
+        composable(Screens.home) {
+            HomeScreen(navController = navController)
         }
         composable(Screens.favorite) {
             FavoriteScreen(navController = navController)

@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.hq.quanhqph33420_assignment.R
+import com.hq.quanhqph33420_assignment.bottom_nav.Screens
 import com.hq.quanhqph33420_assignment.database.MyDatabase
 import com.hq.quanhqph33420_assignment.database.entities.Favorites
 import com.hq.quanhqph33420_assignment.database.factory.FavoriteFactory
@@ -71,8 +72,14 @@ private fun FavoriteScreenComponent(modifier: Modifier = Modifier, navController
         SaveUserRepository(MyDatabase.getDatabase(context, scope).saveUserDao())
     val saveUserViewModel: SaveUserViewModel =
         viewModel(factory = SaveUserFactory(saveUserRepository))
-    val saveUser by saveUserViewModel.getUser.observeAsState()
-    val listItem by favoriteViewModel.getAllFavorite(saveUser!!.email).observeAsState(emptyList())
+    val saveUser by saveUserViewModel.getUser.observeAsState(null)
+    val email = when {
+        saveUser != null -> saveUser!!.email
+        else -> "null"
+    }
+    val listItem by favoriteViewModel.getAllFavorite(email)
+        .observeAsState(emptyList())
+
     Column(
         modifier
             .fillMaxSize()
@@ -101,7 +108,7 @@ private fun FavoriteScreenComponent(modifier: Modifier = Modifier, navController
                 )
             }
             IconButton(onClick = {
-                //navController.navigate(Screens.cart)
+                navController.navigate(Screens.cart)
             }) {
                 Icon(Icons.Outlined.ShoppingCart, contentDescription = null)
             }

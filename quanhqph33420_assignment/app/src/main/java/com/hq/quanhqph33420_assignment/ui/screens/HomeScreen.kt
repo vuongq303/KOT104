@@ -23,36 +23,21 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -71,8 +56,7 @@ import com.hq.quanhqph33420_assignment.database.repository.ProductRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.FilterIcon
-import com.hq.quanhqph33420_assignment.model.IconItems
-import com.hq.quanhqph33420_assignment.nav.Screens
+import com.hq.quanhqph33420_assignment.bottom_nav.Screens
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -154,7 +138,7 @@ private fun ListProduct(navController: NavController, listProducts: List<Product
         columns = StaggeredGridCells.Fixed(2),
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.9f)
+            .fillMaxHeight()
             .padding(20.dp),
         state = state,
         horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -208,48 +192,6 @@ private fun FilterComponent(modifier: Modifier = Modifier) {
         }
     }
 }
-
-@Composable
-private fun BottomNavigationComponent(
-    modifier: Modifier = Modifier
-) {
-    val items = listOf(
-        IconItems(Icons.Filled.Home, Icons.Outlined.Home),
-        IconItems(Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
-        IconItems(Icons.Filled.Notifications, Icons.Outlined.Notifications),
-        IconItems(Icons.Filled.Person, Icons.Outlined.Person)
-    )
-
-    var selectedItem by remember {
-        mutableIntStateOf(0)
-    }
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedItem == index,
-                        onClick = {
-                            selectedItem = index
-                        },
-                        icon = {
-                            Icon(
-                                painter = if (selectedItem == index) {
-                                    rememberVectorPainter(image = item.selectedIcon)
-                                } else {
-                                    rememberVectorPainter(image = item.unselectedIcon) // Bổ sung icon cho trạng thái không được chọn
-                                },
-                                contentDescription = null,
-                            )
-                        })
-                }
-            }
-        }
-    ) { e ->
-        Text(text = "", modifier.padding(e))
-    }
-}
-
 @Composable
 private fun ComponentHomeScreen(
     modifier: Modifier = Modifier,
@@ -293,7 +235,6 @@ private fun ComponentHomeScreen(
             Spacer(modifier.height(15.dp))
             FilterComponent()
             ListProduct(navController = navController, listProducts = listProduct)
-            BottomNavigationComponent()
         }
     }
 }

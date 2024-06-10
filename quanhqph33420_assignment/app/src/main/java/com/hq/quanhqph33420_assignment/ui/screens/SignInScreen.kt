@@ -56,6 +56,7 @@ import com.hq.quanhqph33420_assignment.database.repository.UserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.SaveUserViewModel
 import com.hq.quanhqph33420_assignment.database.viewModel.UserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
+import com.hq.quanhqph33420_assignment.bottom_nav.Screens
 
 @Composable
 fun SignInScreen(navController: NavController) {
@@ -155,7 +156,7 @@ private fun SignInScreenComponent(
         Spacer(modifier.height(20.dp))
         Card(
             modifier
-                .fillMaxHeight(0.8f)
+                .fillMaxHeight(0.9f)
                 .fillMaxWidth()
                 .padding(0.dp, 0.dp, 20.dp, 0.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -189,6 +190,7 @@ private fun SignInScreenComponent(
                     )
                 )
             }
+            Spacer(modifier.height(20.dp))
             Text(
                 text = "Forgot Password",
                 modifier
@@ -218,7 +220,7 @@ private fun SignInScreenComponent(
                                             email
                                         )
                                     )
-                                    navController.navigate("home")
+                                    navController.navigate(Screens.bottomApp)
                                 } else {
                                     Toast.makeText(
                                         context,
