@@ -29,7 +29,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +56,10 @@ import com.hq.quanhqph33420_assignment.database.repository.SaveUserRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.FavoriteViewModel
 import com.hq.quanhqph33420_assignment.database.viewModel.SaveUserViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
+import com.hq.quanhqph33420_assignment.ui.component.DialogConfirm
+import com.hq.quanhqph33420_assignment.utils.AppUtils
+
+var itemFavorites: Favorites? = null
 
 @Composable
 fun FavoriteScreen(navController: NavController) {
@@ -73,13 +80,28 @@ private fun FavoriteScreenComponent(modifier: Modifier = Modifier, navController
     val saveUserViewModel: SaveUserViewModel =
         viewModel(factory = SaveUserFactory(saveUserRepository))
     val saveUser by saveUserViewModel.getUser.observeAsState(null)
+
     val email = when {
         saveUser != null -> saveUser!!.email
         else -> "null"
     }
+    var dialogConfirm by remember {
+        mutableStateOf(false)
+    }
     val listItem by favoriteViewModel.getAllFavorite(email)
         .observeAsState(emptyList())
-
+    when {
+        dialogConfirm -> DialogConfirm(
+            onDismissRequest = { dialogConfirm = false },
+            onConfirmation = {
+                favoriteViewModel.removeFromFavorite(itemFavorites!!)
+                dialogConfirm = false
+                AppUtils.ToastUtils(context, "Removed item ${itemFavorites!!.nameProduct}")
+            },
+            dialogTitle = "Remove Favorite",
+            dialogText = "Remove item from favorite?"
+        )
+    }
     Column(
         modifier
             .fillMaxSize()
@@ -113,12 +135,19 @@ private fun FavoriteScreenComponent(modifier: Modifier = Modifier, navController
                 Icon(Icons.Outlined.ShoppingCart, contentDescription = null)
             }
         }
-        ListItem(list = listItem)
+        ListItem(
+            list = listItem,
+            openDialog = { dialogConfirm = true },
+        )
     }
 }
 
 @Composable
-fun ItemList(item: Favorites, modifier: Modifier = Modifier) {
+fun ItemList(
+    item: Favorites,
+    modifier: Modifier = Modifier,
+    openDialog: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,6 +196,8 @@ fun ItemList(item: Favorites, modifier: Modifier = Modifier) {
                 ) {
                     IconButton(
                         onClick = {
+                            itemFavorites = item
+                            openDialog()
                         },
                         modifier = Modifier.background(Color.White)
                     ) {
@@ -205,10 +236,10 @@ fun ItemList(item: Favorites, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ListItem(list: List<Favorites>) {
+fun ListItem(list: List<Favorites>, openDialog: () -> Unit) {
     LazyColumn {
         items(list) { item ->
-            ItemList(item = item)
+            ItemList(item = item, openDialog = openDialog)
         }
     }
 }

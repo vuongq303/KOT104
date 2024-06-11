@@ -32,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import com.hq.quanhqph33420_assignment.model.IconItems
 import com.hq.quanhqph33420_assignment.ui.screens.FavoriteScreen
 import com.hq.quanhqph33420_assignment.ui.screens.HomeScreen
+import com.hq.quanhqph33420_assignment.ui.screens.NotificationBottomScreen
+import com.hq.quanhqph33420_assignment.ui.screens.UserScreen
 
 @Composable
 fun BottomApp(navControllerMain: NavController) {
@@ -52,6 +54,12 @@ fun BottomApp(navControllerMain: NavController) {
             }
             composable(Screens.favorite) {
                 FavoriteScreen(navController = navControllerMain)
+            }
+            composable(Screens.notificationBottom) {
+                NotificationBottomScreen(navController = navControllerMain)
+            }
+            composable(Screens.person) {
+                UserScreen(navController = navControllerMain)
             }
         }
     }

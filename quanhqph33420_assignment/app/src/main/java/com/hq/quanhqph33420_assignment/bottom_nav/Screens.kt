@@ -12,7 +12,7 @@ class Screens {
         val notification = "notification"
         val favorite = "favorite"
         val bottomApp = "bottomapp"
-        val notificationBottom = "notification"
+        val notificationBottom = "notificationBottom"
         val person = "person"
     }
 }
