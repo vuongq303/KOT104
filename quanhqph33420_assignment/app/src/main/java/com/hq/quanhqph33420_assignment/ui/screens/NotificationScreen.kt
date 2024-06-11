@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -29,17 +31,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hq.quanhqph33420_assignment.R
-import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.bottom_nav.Screens
+import com.hq.quanhqph33420_assignment.font.GoogleFont
 
 @Composable
 fun NotificationScreen(modifier: Modifier = Modifier, navController: NavController) {
+    val scrollState = rememberScrollState()
     Surface(
         modifier
             .fillMaxSize()
             .background(Color.White)
+            .verticalScroll(scrollState)
     ) {
         Column(modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.height(50.dp))
             Row(
                 modifier.fillMaxHeight(0.25f),
                 verticalAlignment = Alignment.CenterVertically
@@ -89,6 +94,7 @@ fun NotificationScreen(modifier: Modifier = Modifier, navController: NavControll
                     color = Color(0xFF606060)
                 )
             }
+            Spacer(modifier = Modifier.height(10.dp))
             Column(
                 modifier
                     .fillMaxWidth()

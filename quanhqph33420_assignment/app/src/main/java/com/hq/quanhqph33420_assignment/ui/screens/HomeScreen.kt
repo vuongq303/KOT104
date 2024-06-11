@@ -49,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.hq.quanhqph33420_assignment.R
+import com.hq.quanhqph33420_assignment.bottom_nav.Screens
 import com.hq.quanhqph33420_assignment.database.MyDatabase
 import com.hq.quanhqph33420_assignment.database.entities.Products
 import com.hq.quanhqph33420_assignment.database.factory.ProductFactory
@@ -56,7 +57,6 @@ import com.hq.quanhqph33420_assignment.database.repository.ProductRepository
 import com.hq.quanhqph33420_assignment.database.viewModel.ProductViewModel
 import com.hq.quanhqph33420_assignment.font.GoogleFont
 import com.hq.quanhqph33420_assignment.model.FilterIcon
-import com.hq.quanhqph33420_assignment.bottom_nav.Screens
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -78,7 +78,7 @@ private fun ItemProduct(
     navController: NavController,
 ) {
     Column(modifier = Modifier.clickable {
-        navController.navigate("itemProduct/${productModel.id}")
+        navController.navigate("${Screens.itemProduct}/${productModel.id}")
     }) {
         Box(modifier = Modifier.height(200.dp)) {
             AsyncImage(
@@ -192,6 +192,7 @@ private fun FilterComponent(modifier: Modifier = Modifier) {
         }
     }
 }
+
 @Composable
 private fun ComponentHomeScreen(
     modifier: Modifier = Modifier,

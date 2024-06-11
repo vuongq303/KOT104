@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.hq.quanhqph33420_assignment.bottom_nav.Screens
 import com.hq.quanhqph33420_assignment.database.MyDatabase
 import com.hq.quanhqph33420_assignment.database.entities.Carts
 import com.hq.quanhqph33420_assignment.database.factory.CartFactory
@@ -319,7 +320,7 @@ fun CartScreen(modifier: Modifier = Modifier, navController: NavController) {
             }
             Button(
                 onClick = {
-                    navController.navigate("checkout")
+                    navController.navigate("${Screens.checkOut}/$priceTotal")
                 }, shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
